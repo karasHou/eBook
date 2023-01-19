@@ -7,7 +7,7 @@ import { readdir, writeFile } from "fs"
 
 
 // 默认路径当前文件
-const targetDir = process.argv.slice(3, 4)[0] || "./";
+const targetDir = process.argv.slice(3, 4)[0] || "./src/";
 
 const template = `
 <!DOCTYPE html>
@@ -50,7 +50,7 @@ function writeContent(fileList: string[]) {
   let str = "";
 
   fileList.forEach((file) => {
-    const anchorStr = `<a href="./${file}" target="_blank" rel="noopener noreferrer"></a> <br/>
+    const anchorStr = `<a href="./src/${file}" target="_blank" rel="noopener noreferrer"></a> <br/>
     `;
     str += anchorStr;
   })
