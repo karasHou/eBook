@@ -1,0 +1,27 @@
+{
+  "name": "how-browsers-work",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx ts-node ./script/generateContents.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karasHou/how-browsers-work.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/karasHou/how-browsers-work/issues"
+  },
+  "homepage": "https://github.com/karasHou/how-browsers-work#readme",
+  "devDependencies": {
+    "@swc/core": "^1.3.27",
+    "@swc/helpers": "^0.4.14",
+    "@types/node": "^18.11.18",
+    "regenerator-runtime": "^0.13.11"
+  }
+}
