@@ -63,7 +63,7 @@ function writeContent(fileList: string[]) {
   let str = "";
 
   fileList.forEach((file) => {
-    const anchorStr = `<a href="./src/${file}" target="_blank" rel="noopener noreferrer"></a> <br/>
+    const anchorStr = `<a href="./src/${file}" target="_blank" rel="noopener noreferrer">${file}</a> <br/>
     `;
     str += anchorStr;
   })
