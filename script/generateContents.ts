@@ -27,6 +27,20 @@ const template = `
       color: inherit;
     }
 
+    a {
+      color: #0e7490;
+      text-decoration: none;
+      font-weight: 500;
+      box-shadow: inset 0 -0.125em 0 0 #fff, inset 0 -0.375em 0 0 rgb(165 243 252 / 40%);
+      display: block;
+      transition: transform ease 0.1s;
+      transform-origin: left;
+    }
+
+    a:hover {
+      transform: scale(1.05);
+    }
+
   </style>
   <title>how-browsers-work</title>
 </head>
@@ -63,7 +77,7 @@ function writeContent(fileList: string[]) {
   let str = "";
 
   fileList.forEach((file) => {
-    const anchorStr = `<a href="./src/${file}" target="_blank" rel="noopener noreferrer">${file}</a> <br/>
+    const anchorStr = `<a href="./src/${file}" target="_blank" rel="noopener noreferrer">${file}</a>
     `;
     str += anchorStr;
   })
