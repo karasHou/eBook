@@ -32,7 +32,7 @@ const template = `
       text-decoration: none;
       font-weight: 500;
       box-shadow: inset 0 -0.125em 0 0 #fff, inset 0 -0.375em 0 0 rgb(165 243 252 / 40%);
-      display: block;
+      display: inline-block;
       transition: transform ease 0.1s;
       transform-origin: left;
     }
