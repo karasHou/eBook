@@ -9,6 +9,9 @@ import { readdir, writeFile } from "fs"
 // 默认路径当前文件
 const targetDir = process.argv.slice(3, 4)[0] || "./src/";
 
+
+console.log(process.env);
+
 const template = `
 <!DOCTYPE html>
 <html lang="en">
