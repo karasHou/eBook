@@ -1,15 +1,10 @@
 {
-  "name": "how-browsers-work",
+  "name": "e-book",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "PREVIEW_HOST=8080 node ./script/testEnv.js",
-    "start": "npx ts-node ./script/generateContents.ts"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/karasHou/how-browsers-work.git"
+    "generate": "npx ts-node ./script/generateContents.ts"
   },
   "keywords": [],
   "author": "",

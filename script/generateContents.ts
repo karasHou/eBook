@@ -1,17 +1,19 @@
-/**
- * 生成HTML的目录
- */
+import { resolve, join } from 'path';
+import { readdir, writeFile } from 'fs/promises';
+import { existsSync, mkdirSync } from 'fs';
 
-import path from "path";
-import { readdir, writeFile } from "fs"
+// 定义路径常量
+const SRC_DIRECTORY = './src/';
+const DIRECTORY_PATH = './directory';
+const INDEX_FILE_NAME = 'index.html';
+const HTML_EXTENSION = '.html';
 
+// 获取目标目录
+const targetDir = process.argv.slice(3, 4)[0] || SRC_DIRECTORY;
+const dirPath = resolve(process.cwd(), DIRECTORY_PATH);
+const nowWorkPath = resolve(process.cwd(), targetDir);
 
-// 默认路径当前文件
-const targetDir = process.argv.slice(3, 4)[0] || "./src/";
-
-
-console.log(process.env);
-
+// HTML模板
 const template = `
 <!DOCTYPE html>
 <html lang="en">
@@ -45,56 +47,72 @@ const template = `
     }
 
   </style>
-  <title>how-browsers-work</title>
+  <title>eBooks</title>
 </head>
 
 <body>
   $$$
 </body>
 </html>
-`
+`;
 
-// process.cwd()：当前执行终端命令的目录
-const nowWorkPath = path.resolve(process.cwd(), targetDir);
-
-
-function readFile(path: string) {
-  readdir(path, (err, fileList) => {
-    if (err !== null) {
-      console.log('error');
-    } else {
-      console.log('当前目录文件');
-      console.log(fileList);
-      // 只包含.html
-      writeContent(fileList.filter((file) => (/\.html$/i.test(file))))
-    }
-  })
-
+// 生成锚点标签函数
+function getAnchorTag(href: string, text: string): string {
+  return `<a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a><br/>`;
 }
 
-/**
- * 写入html文件
- * @param fileList 
- */
-function writeContent(fileList: string[]) {
-  let str = "";
-
-  fileList.forEach((file) => {
-    const anchorStr = `<a href="./src/${file}" target="_blank" rel="noopener noreferrer">${file}</a><br/>
-    `;
-    str += anchorStr;
-  })
-
-  writeFile('index.html', template.replace('$$$', str), (err) => {
-    if (err) {
-      console.log('出现错误');
-      console.log(err);
-    } else {
-      console.log('生成成功');
-    }
-  })
-
+// 确保目录存在的函数
+function ensureDirectoryExists(path: string): void {
+  if (!existsSync(path)) {
+    mkdirSync(path, { recursive: true });
+  }
 }
 
+// 生成目录HTML文件的函数
+async function generateDirHtml(path: string): Promise<string[]> {
+  try {
+    const fileDir = await readdir(path);
+    ensureDirectoryExists(dirPath);
+    const fileDirStr = fileDir
+      .map((file) => getAnchorTag(join(DIRECTORY_PATH, `${file}${HTML_EXTENSION}`), file))
+      .join('');
+    await writeFile(resolve(process.cwd(), INDEX_FILE_NAME), template.replace('$$$', fileDirStr));
+    console.log('目录索引生成成功。');
+    return fileDir;
+  } catch (error) {
+    console.error('生成目录索引时出错：', error);
+    throw error;
+  }
+}
 
-readFile(nowWorkPath)
+// 生成项目HTML文件的函数
+async function generateProjectHtml(projectName: string, projectPath: string): Promise<void> {
+  try {
+    const projectHtmlList = (await readdir(projectPath)).filter((file) => file.endsWith(HTML_EXTENSION));
+    const fileDirStr = projectHtmlList
+      .map((pFile) => getAnchorTag(join('..', SRC_DIRECTORY, projectName, pFile), pFile))
+      .join('');
+    await writeFile(resolve(dirPath, `${projectName}${HTML_EXTENSION}`), template.replace('$$$', fileDirStr));
+  } catch (error) {
+    console.error(`为项目${projectName}生成索引时出错：`, error);
+    throw error;
+  }
+}
+
+// 主函数
+(async function main() {
+  try {
+    // 生成目录 html
+    const dirs = await generateDirHtml(nowWorkPath);
+
+    // 生成目录对应的html
+    const promisesList = dirs.map((project) => {
+      const projectPath = resolve(nowWorkPath, project);
+      return generateProjectHtml(project, projectPath);
+    });
+    await Promise.all(promisesList);
+    console.log('所有项目索引均已成功生成。');
+  } catch (error) {
+    console.error('生成过程中出现错误：', error);
+  }
+})();
